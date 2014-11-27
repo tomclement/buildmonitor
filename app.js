@@ -29,39 +29,19 @@ var getXml = function (req) {
                 pageData += chunk;
             });
             res.on('end', function () {
-                options = config.go_url;
-                getGoBuild();
-            });
-        }
-
-        function getGoBuildDetails(res) {
-            console.log('STATUS: ' + res.statusCode);
-            console.log('HEADERS: ' + JSON.stringify(res.headers));
-            res.setEncoding('utf8');
-
-            res.setEncoding('utf8');
-            res.on('data', function (chunk) {
-                pageData += chunk;
-            });
-            res.on('end', function () {
-                pageData = pageData.replace('\n</Projects>\n<?xml version="1.0" encoding="utf-8"?>\n<Projects>', "")
+                
                 console.log(pageData);
                 parseString(pageData, {trim: true}, function (err, result) {
                     req.io.emit('talk', {
                         message: result
                     });
                 });
+
             });
         }
 
         function getSnapBuild() {
             https.get(options, getSnapBuildDetails).on('error', function (e) {
-                console.log('ERROR: ' + e.message);
-            });
-        }
-
-        function getGoBuild() {
-            http.get(options, getGoBuildDetails).on('error', function (e) {
                 console.log('ERROR: ' + e.message);
             });
         }
@@ -107,7 +87,6 @@ app.io.route('tray', function (req) {
 
     }, 5000);
 });
-
 
 app.server.listen(app.get('port'), function () {
     console.log("Express server listening on port " + app.get('port'));
