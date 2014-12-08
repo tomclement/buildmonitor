@@ -44,7 +44,7 @@ var getXml = function (req) {
                 pageData += chunk;
             });
             res.on('end', function () {
-                pageData = pageData.replace('\n</Projects>\n<?xml version="1.0" encoding="utf-8"?>\n<Projects>', "")
+                pageData = pageData.replace('\n</Projects>\n<Projects>', "")
                 console.log(pageData);
                 parseString(pageData, {trim: true}, function (err, result) {
                     req.io.emit('talk', {
@@ -61,7 +61,7 @@ var getXml = function (req) {
         }
 
         function getGoBuild() {
-            http.get(options, getGoBuildDetails).on('error', function (e) {
+            https.get(options, getGoBuildDetails).on('error', function (e) {
                 console.log('ERROR: ' + e.message);
             });
         }
